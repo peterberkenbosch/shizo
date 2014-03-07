@@ -1,0 +1,11 @@
+#!/bin/bash
+
+
+#delete ES Index
+curl -XDELETE 'http://localhost:9200/shizo'
+
+#create ES Index
+curl -XPUT 'http://localhost:9200/shizo/'
+
+#create mapping for product
+curl -XPUT 'http://localhost:9200/shizo/product/_mapping' -d @utils/es_mappings/product.mapping.json

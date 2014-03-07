@@ -1,0 +1,51 @@
+{
+  "product": {
+    "properties": {
+      "bgg": {
+        "type": "nested",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "score": {
+            "type": "long"
+          }
+        }
+      },
+      "categories": {
+        "type": "string", "index": "not_analyzed" 
+      },
+      "description": {
+        "type": "string"
+      },
+      "designers": {
+        "type": "string", "index": "not_analyzed" 
+      },
+      "images": {
+        "properties": {
+          "height": {
+            "type": "double"
+          },
+          "type": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "width": {
+            "type": "double"
+          }
+        }
+      },
+      "name": {
+        "type": "string"
+      },
+      "price": {
+        "type": "double"
+      },
+      "sku": {
+        "type": "string"
+      }
+    }
+  }
+}

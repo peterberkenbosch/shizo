@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <title>Project Shizo</title>
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/store.css">
+  <link rel="stylesheet" href="css/select2.css">
+  <link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+  <script src="http://fb.me/react-0.9.0.js"></script>
+  <script src="http://fb.me/JSXTransformer-0.9.0.js"></script>
+  <script src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
+  <script src="js/jquery.js"></script>
+  <script src="js/jquery-ui-1.10.3.custom.js"></script>
+  <script src="js/underscore.js"></script>
+  <script src="js/mustache.js"></script>
+  <script src="js/waterfall.min.js"></script>
+  <script src="js/select2.min.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/store.js"></script>
+  <script type="text/jsx">
+    /**
+     * @jsx React.DOM
+     */
+    var App = React.createClass({
+      render: function() {
+        return (
+          <div>
+            Hello, world! I am a CommentBox.
+          </div>
+        );
+      }
+    });
+
+    React.renderComponent(
+      <App />,
+      document.getElementById('header')
+    );
+  </script>
+  <script type="text/template" id="co-complete-tpl">
+    <div id="cart">
+      <div class="heading">
+        <i class="fa fa-shopping-cart fa-lg"></i>
+        <span class="total">Checkout: 5 of 5</span>
+        <i id="arrow" class="fa fa-arrow-circle-down fa-lg"></i>
+      </div>
+      <div class="info">
+        <h2>Thank you</h2>
+        <p>Your order will be dispatched shortly.</p>
+        <div class="checkout">
+          <div id="close">
+            <i class="closecart fa fa-arrow-circle-up fa-2x"></i>
+          </div>
+          <a id="continue" href="#">
+            <span class="button">
+              <i class="fa fa-arrow-circle-up fa-lg"></i> Close
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </script>
+  <script type="text/template" id="co-confirmation-tpl">
+    <div id="cart">
+      <div class="heading">
+        <i class="fa fa-shopping-cart fa-lg"></i>
+        <span class="total">Checkout: 4 of 5</span>
+        <i id="arrow" class="fa fa-arrow-circle-down fa-lg"></i>
+      </div>
+      <div class="info">
+        <h2>Confirm Order</h2>
+        <p>Are you sure you wanna buy all this junk?</p>
+        <div class="checkout">
+          <div id="close">
+            <i id="closecart" class="fa fa-arrow-circle-up fa-2x"></i>
+          </div>
+          <a id="back" href="#">
+            <span class="button">
+              <i class="fa fa-arrow-circle-left fa-lg"></i> Back
+            </span>
+          </a>
+          <a id="continue" href="#">
+            <span class="button">
+              <i class="fa fa-arrow-circle-right fa-lg"></i> Continue
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </script>
+  <script type="text/template" id="co-payment-tpl">
+    <div id="cart">
+      <div class="heading">
+        <i class="fa fa-shopping-cart fa-lg"></i>
+        <span class="total">Checkout: 3 of 5</span>
+        <i id="arrow" class="fa fa-arrow-circle-down fa-lg"></i>
+      </div>
+      <div class="info">
+        <h2>Payment Options</h2>
+        <p>We can pay use with:</p>
+        <div class="checkout">
+          <div id="close">
+            <i id="closecart" class="fa fa-arrow-circle-up fa-2x"></i>
+          </div>
+          <a id="back" href="#">
+            <span class="button">
+              <i class="fa fa-arrow-circle-left fa-lg"></i> Back
+            </span>
+          </a>
+          <a id="continue" href="#">
+            <span class="button">
+              <i class="fa fa-arrow-circle-right fa-lg"></i> Continue
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </script>
+  <script type="text/template" id="co-delivery-tpl">
+    <div id="cart">
+      <div class="heading">
+        <i class="fa fa-shopping-cart fa-lg"></i>
+        <span class="total">Checkout: 2 of 5</span>
+        <i id="arrow" class="fa fa-arrow-circle-down fa-lg"></i>
+      </div>
+      <div class="info">
+        <h2>Delivery Options</h2>
+        <p>We can ship to you via:</p>
+        <div class="checkout">
+          <div id="close">
+            <i id="closecart" class="fa fa-arrow-circle-up fa-2x"></i>
+          </div>
+          <a id="back" href="#">
+            <span class="button">
+              <i class="fa fa-arrow-circle-left fa-lg"></i> Back
+            </span>
+          </a>
+          <a id="continue" href="#">
+            <span class="button">
+              <i class="fa fa-arrow-circle-right fa-lg"></i> Continue
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </script>
+  <script type="text/template" id="co-address-tpl">
+    <div id="cart">
+      <div class="heading">
+        <i class="fa fa-shopping-cart fa-lg"></i>
+        <span class="total">Checkout: 1 of 5</span>
+        <i id="arrow" class="fa fa-arrow-circle-down fa-lg"></i>
+      </div>
+      <div class="info">
+        <h2>Address</h2>
+        <p class="left">
+          <label>First Name</label>
+          <input type="text" name="first_name" value="{{order.billing_address.first_name}}">
+        </p>
+        <p class="left rhs">
+          <label>Last Name</label>
+          <input type="text" name="last_name" value="{{order.billing_address.last_name}}">
+        </p>
+        <p class="clear">
+          <label>Address 1</label>
+          <input type="text" name="address_1" class="large" value="{{order.billing_address.address_1}}">
+        </p>
+        <p>
+          <label>Address 2</label>
+          <input type="text" name="address_2" class="large" value="{{order.billing_address.address_2}}">
+        </p>
+        <p>
+          <label>City</label>
+          <input type="text" name="city" class="large" value="{{order.billing_address.city}}">
+        </p>
+        <p>
+          <label>State</label>
+          <input type="text" name="state" class="large" value="{{order.billing_address.state}}">
+        </p>
+        <p>
+          <label>Country</label>
+          <select name="country" class="large">
+            <option>United States</option>
+            <option>Ireland</option>
+          <select>
+        </p>
+        <div class="checkout">
+          <div id="close">
+            <i id="closecart" class="fa fa-arrow-circle-up fa-2x"></i>
+          </div>
+          <a id="back" href="#">
+            <span class="button">
+              <i class="fa fa-arrow-circle-left fa-lg"></i> Back
+            </span>
+          </a>
+          <a id="continue" href="#">
+            <span class="button">
+              <i class="fa fa-arrow-circle-right fa-lg"></i> Continue
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </script>
+  <script type="text/template" id="cart-tpl">
+    <div id="cart">
+      <div class="heading">
+        <a href="#">
+          <i class="fa fa-shopping-cart fa-lg"></i>
+          <span class="total">{{itemCount}} item(s) - ${{totals.item}}</span>
+          <i id="arrow" class="fa fa-arrow-circle-down fa-lg"></i>
+        </a>
+      </div>
+      <div class="info">
+        <table>
+          <tbody>
+            {{#lineItems}}
+            <tr>
+              <td class="product">
+                <a href="#">{{name}}</a>
+              </td>
+              <td class="quantity">x&nbsp;{{count}}</td>
+              <td class="total">${{price}}</td>
+              <td class="remove" data-sku="{{sku}}">
+                <i class="fa fa-trash-o fa-fw"></i>
+              </td>
+            </tr>
+            {{/lineItems}}
+          </tbody>
+        </table>
+        {{#empty}}
+          <div class="empty_summary">
+            Your cart is empty!
+          </div>
+        {{/empty}}
+        {{^empty}}
+          <div class="summary">
+            <span class="totalsum">${{totals.item}}</span>
+          </div>
+        {{/empty}}
+        <div class="checkout">
+          <div id="close">
+            <i class="closecart fa fa-arrow-circle-up fa-2x"></i>
+          </div>
+          {{#empty}}
+            <a class="closecart" href="#">
+              <span class="button">
+                <i class="fa fa-arrow-circle-up fa-lg"></i> Close
+              </span>
+            </a>
+          {{/empty}}
+          {{^empty}}
+            <a id="empty" href="#">
+              <span class="button ">
+                <i class="fa fa-trash-o fa-lg"></i> Empty Cart
+              </span>
+            </a>
+            <a id="start" href="#">
+              <span class="button">
+                <i class="fa fa-credit-card fa-lg"></i> Checkout
+              </span>
+            </a>
+          {{/empty}}
+        </div>
+      </div>
+    </div>
+  </script>
+  <script type="text/template" id="waterfall-tpl">
+    {{#result}}
+      <div class="item">
+        <div class="title">{{name}}</div>
+        <img width="{{width}}" height="{{height}}" src="{{image}}"  />
+        <div class="description">
+          {{{short}}}
+        </div>
+        <div class="price">
+          ${{price}}
+        </div>
+        <div class="rank">
+          BGG Rank: {{bgg_rank}}
+        </div>
+        <a href="#" data-sku="{{sku}}" data-name="{{name}}" data-amount="{{price}}" class="add_to_cart">
+          Add to Cart
+        </a>
+      </div>
+    {{/result}}
+  </script>
+</head>
+<body>
+  <div id="header">
+    <h1>Project Shizo</h1>
+
+    <div id="cart">CART</div>
+    <select id="categories">
+      <option></option>
+      <% Shizo::Category.all.each do |category| %>
+        <option value="<%= category.term %>"><%= "#{category.term} (#{category['count']})" %></option>
+      <% end %>
+    </select>
+
+  </div>
+
+  <%= yield %>
+  <div id="footer">
+    Copyright & Stuff
+  </div>
+  <script type="text/javascript">
+  </script>
+</body>
+</html>
