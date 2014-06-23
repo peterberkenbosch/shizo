@@ -1,7 +1,7 @@
 require 'active_support/inflector'
 
 module Shizo
-  class Shipping
+  class Promo
     @@options = {}
 
     def self.options

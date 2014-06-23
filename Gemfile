@@ -2,11 +2,13 @@ source 'https://rubygems.org'
 
 gem 'sinatra'
 gem 'elasticsearch'
+gem 'redis'
 gem 'json'
 gem 'hashie'
 gem 'moneta'
 gem 'tilt-jbuilder', require: 'sinatra/jbuilder'
 gem 'truncate_html', github: 'hgmnz/truncate_html'
+gem 'dimensions'
 
 gem 'byebug'
 

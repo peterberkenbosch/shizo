@@ -28,6 +28,13 @@ module Shizo
       jbuilder :index
     end
 
+    get '/categories' do
+      @categories = Shizo::Category.all
+
+      content_type 'application/json'
+      jbuilder :categories
+    end
+
     # used to accept product details from the hub, use utils/import_products
     # to fake hub activity.
     #
@@ -38,7 +45,6 @@ module Shizo
         bdy = request.body.read
         @message = Hashie::Mash.new(::JSON.parse(bdy))
       rescue Exception => e
-        byebug
         halt 406
       end
 

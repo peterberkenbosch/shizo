@@ -1,13 +1,8 @@
 require "sinatra/base"
 require './shipping/shipping.rb'
+require './shipping/config.rb'
 
 module Shizo
-  Shipping.setup do |config|
-    config.add_option "FedEx Next Day" do |shipment|
-      %{us, ca}.include? shipment.shipping_address.country
-    end
-  end
-
   class Shipping::App < Sinatra::Base
 
     get '/'  do
@@ -15,13 +10,17 @@ module Shizo
     end
 
     post '/estimate' do
-      shipment = Hashie::Mash.new(params)
+      @object = Hashie::Mash.new JSON.parse(request.body.read)
 
-      quantity = shipment.items.inject(0) do |sum,item|
-        sum += item.quantity.to_i
+      estimates = []
+      Shizo::Shipping.options.each do |method, option|
+        if amount = Shizo::Shipping.send(method, @object['order'])
+          estimates << option.merge(amount: amount, name: method)
+        end
       end
 
-      (quantity * 10).to_s
+      content_type 'application/json'
+      estimates.to_json
     end
   end
 end

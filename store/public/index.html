@@ -8,8 +8,6 @@
   <link rel="stylesheet" href="css/select2.css">
   <link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>
   <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-  <script src="http://fb.me/react-0.9.0.js"></script>
-  <script src="http://fb.me/JSXTransformer-0.9.0.js"></script>
   <script src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
   <script src="js/jquery.js"></script>
   <script src="js/jquery-ui-1.10.3.custom.js"></script>
@@ -20,25 +18,6 @@
   <script src="js/storage.js"></script>
   <script src="js/cart.js"></script>
   <script src="js/store.js"></script>
-  <script type="text/jsx">
-    /**
-     * @jsx React.DOM
-     */
-    var App = React.createClass({
-      render: function() {
-        return (
-          <div>
-            Hello, world! I am a CommentBox.
-          </div>
-        );
-      }
-    });
-
-    React.renderComponent(
-      <App />,
-      document.getElementById('header')
-    );
-  </script>
   <script type="text/template" id="co-complete-tpl">
     <div id="cart">
       <div class="heading">
@@ -53,7 +32,7 @@
           <div id="close">
             <i class="closecart fa fa-arrow-circle-up fa-2x"></i>
           </div>
-          <a id="continue" href="#">
+          <a id="complete" href="#">
             <span class="button">
               <i class="fa fa-arrow-circle-up fa-lg"></i> Close
             </span>
@@ -71,7 +50,53 @@
       </div>
       <div class="info">
         <h2>Confirm Order</h2>
-        <p>Are you sure you wanna buy all this junk?</p>
+        <table>
+          <tbody>
+            <tr>
+              <td colspan="3" style="text-align: left;">
+                <strong>Items</strong>
+              </td>
+            </tr>
+            {{#lineItems}}
+            <tr>
+              <td class="product">
+                <a href="#">{{name}}</a>
+              </td>
+              <td class="quantity">x&nbsp;{{count}}</td>
+              <td class="total">${{price}}</td>
+            </tr>
+            {{/lineItems}}
+            <tr>
+              <td colspan="3" style="text-align: left;">
+                <br>
+                <strong>Shipping Method</strong>
+              </td>
+            </tr>
+            {{#shippingMethod}}
+            <tr>
+              <td class="product" colspan="2">
+                <a href="#">{{display}}</a>
+              </td>
+              <td class="total">${{amount}}</td>
+            </tr>
+            {{/shippingMethod}}
+            <tr>
+              <td colspan="3" style="text-align: left;">
+                <br>
+                <strong>Payment</strong>
+              </td>
+            </tr>
+            {{#payment}}
+            <tr>
+              <td class="product" colspan="2">
+                <a href="#">Credit Card: {{card_number}}</a>
+              </td>
+              <td class="total">{{expiry}}</td>
+            </tr>
+            {{/payment}}
+          </tbody>
+        </table>
+        <br>
         <div class="checkout">
           <div id="close">
             <i id="closecart" class="fa fa-arrow-circle-up fa-2x"></i>
@@ -99,7 +124,40 @@
       </div>
       <div class="info">
         <h2>Payment Options</h2>
-        <p>We can pay use with:</p>
+        <div id="payment_form">
+          {{#payment}}
+            {{#result}}
+              {{#success}}
+                <p>
+                  Payment has been successfully processed.
+                </p>
+                <hr>
+              {{/success}}
+              {{^success}}
+                <p>
+                  Payment failed to process, plrease try again.
+                </p>
+                <hr>
+              {{/success}}
+            {{/result}}
+            <p class="clear">
+              <label>Credit Card Number</label>
+              <input type="text" name="card_number" class="large" value="{{order.payment.card_number}}">
+            </p>
+            <p class="left">
+              <label>Expiry</label>
+              <input type="text" name="expiry" value="{{order.payment.expiry}}">
+            </p>
+            <p class="left rhs">
+              <label>CCV</label>
+              <input type="text" name="ccv" value="{{order.payment.ccv}}">
+            </p>
+            <p class="clear">
+              &nbsp;
+            </p>
+          {{/payment}}
+
+        </div>
         <div class="checkout">
           <div id="close">
             <i id="closecart" class="fa fa-arrow-circle-up fa-2x"></i>
@@ -127,7 +185,28 @@
       </div>
       <div class="info">
         <h2>Delivery Options</h2>
-        <p>We can ship to you via:</p>
+        <table>
+          <tbody>
+            {{#shippingEstimates}}
+            <tr>
+              <td class="product">
+                <a href="#">{{display}}</a>
+              </td>
+              <td class="total">${{amount}}</td>
+              <td class="remove">
+                <input type="radio" name="shipping_method" value="{{name}}">
+              </td>
+            </tr>
+            {{/shippingEstimates}}
+          </tbody>
+        </table>
+        {{^estimatesLoaded}}
+          <div class="">
+            Waiting for response from Shipping service...
+            <br>
+          </div>
+        {{/estimatesLoaded}}
+
         <div class="checkout">
           <div id="close">
             <i id="closecart" class="fa fa-arrow-circle-up fa-2x"></i>
@@ -182,8 +261,9 @@
         <p>
           <label>Country</label>
           <select name="country" class="large">
-            <option>United States</option>
-            <option>Ireland</option>
+            <option value="US">United States</option>
+            <option value="CA">Canada</option>
+            <option value="IE">Ireland</option>
           <select>
         </p>
         <div class="checkout">
@@ -287,26 +367,27 @@
       </div>
     {{/result}}
   </script>
+  <script type="text/template" id="categories-tpl">
+    <select id="categories">
+      <option></option>
+      {{#categories}}
+        <option value="{{name}}">{{name}} ({{count}})</option>
+      {{/categories}}
+    </select>
+  </script>
 </head>
 <body>
   <div id="header">
     <h1>Project Shizo</h1>
 
     <div id="cart">CART</div>
-    <select id="categories">
-      <option></option>
-      <% Shizo::Category.all.each do |category| %>
-        <option value="<%= category.term %>"><%= "#{category.term} (#{category['count']})" %></option>
-      <% end %>
-    </select>
 
+    <div id="category_filter"></div>
   </div>
 
-  <%= yield %>
+  <div id="container"></div>
   <div id="footer">
     Copyright & Stuff
   </div>
-  <script type="text/javascript">
-  </script>
 </body>
 </html>
